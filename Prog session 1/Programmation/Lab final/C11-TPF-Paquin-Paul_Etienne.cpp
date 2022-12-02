@@ -28,13 +28,12 @@ int main()
 	bool cheat = false;
 	bool output;
 	int largeur = 120;
-	int hauteur = 30;
 	int espace = 8;
 	int x, x2;
 	int y;
-	int good, bad;
+	int good, bad, verif, essai = 0;
 
-	//Affichage menu des réglages de la partie
+	//Affichage menu des rï¿½glages de la partie
 	cout << "\n" << right << setw((largeur + titre.size()) / 2) << titre;
 	cout << "\n\n\n" << setw((largeur + reglage.size()) / 2) << reglage;
 	cout << "\n\n\n" << setw(espace) << " " << "Activer le mode en d\202bogage ? (O/N) : ";
@@ -53,7 +52,7 @@ int main()
 			cout << debug;
 	}
 
-	//Password
+	//Password and related variables
 	srand(time(0));
 	char password[lengthPassword] = {};
 	char dummy[lengthPassword] = {};
@@ -66,11 +65,11 @@ int main()
 	}
 
 	//Jeu affichage
-	int espaceBase = 9, espaceN = 5, espaceE = 2*lengthPassword, espaceEB = 6, espaceGood = 18, bufferEval = 4, bufferSecret = 5; //Nécessaire à l'affichage 
+	int espaceBase = 9, espaceN = 5, espaceE = 2*lengthPassword, espaceEB = 6, espaceGood = 18, bufferEval = 4, bufferSecret = 5; //Nï¿½cessaire ï¿½ l'affichage 
 	clrscr();
 	cout << "\n" << right << setw((largeur + titre.size()) / 2) << titre;
 	cout << "\n\n\n\n" << setw(espaceBase) << " ";
-	for (int i = 0; i < nbCouleur; ++i)
+	for (int i = 0; i < nbCouleur; ++i) //Nom des couleurs
 	{
 		cout << couleurs[i];
 		if (i != nbCouleur - 1)
@@ -78,53 +77,56 @@ int main()
 	}
 	cout << "\n\n\n" << setw(espaceBase) << " " << left << setw(espaceN) << "#" << setw(espaceE + espaceEB) << "Essais" << setw(espaceGood) << "Bien plac\202e(s)" << "Mal plac\202e(s)" << "\n\n" << right;
 	y = wherey();
-	for (int i = 0; i < nbEssais; ++i)
+	for (int i = 0; i < nbEssais; ++i) //Nombre d'essais
 		cout << setw(espaceBase) << i+1 << ")" << "\n";
-	if (cheat == true)
+	if (cheat == true) //Is debug enabled?
 	{
 		gotoxy(largeur / 2, y + nbEssais + bufferSecret);
 		cout << "Code Secret : " << reponse;
 	}
 
-	//Input
-	for (int essai = 0; essai < nbEssais; ++essai)
+	//Input/Essais
+	do
 	{
-		//Variable qui doivent être la même valeur au début de chaque loop
+		//Variable qui doivent ï¿½tre la mï¿½me valeur au dï¿½but de chaque loop
 		x = espaceBase + espaceN;
 		eval = 'a';
 		good = 0;
 		bad = 0;
+		verif = 0;
 		gotoxy(x, y + essai);
 		clreol();
-		for (int i = 0; i < lengthPassword; ++i)
+		do
 		{
 			output = false;
-			input[i] = toupper(_getch());
-			for (int test = 0; test < nbCouleur; ++test) //Regarde si c'est une lettre accepté
+			input[verif] = toupper(_getch());
+			for (int test = 0; test < nbCouleur; ++test) //Regarde si c'est une lettre acceptï¿½
 			{
-				if (input[i] == lettres[test])
+				if (input[verif] == lettres[test])
 				{
 					output = true;
 					break;
 				}
-				else if (input[i] == '\x8' && i != 0) //Pourquoi est ce que je ne peux pas le mettre à l'extérieur de ce for ci?
-				{
-					cout << "\b \b" << "\b \b";
-					--i;
-					break;
-				}
 			}
-			if (output == true)
-				cout << input[i] << " ";
-			else
-				--i;
-		}
-		//Évalution des lettres bien et mal placées s'il y en a 
+			if (output == true) //Affichage couleur choisi
+			{
+				cout << input[verif] << " ";
+				++verif;
+			}
+			else if (input[verif] == '\x8' && verif != 0) //Backspace
+			{
+				cout << "\b \b" << "\b \b";
+				--verif;
+			}
+		} 
+		while (verif < lengthPassword);
+
+		//ï¿½valution des lettres bien et mal placï¿½es s'il y en a 
 		gotoxy(0, y + nbEssais + bufferEval);
 		clreol();
 		cout << " \220valuer ? (O/N) : ";
 
-		while (eval != 'O' && eval != 'N')
+		while (eval != 'O' && eval != 'N') //Was your input right?
 		{
 			eval = toupper(_getch());
 		}
@@ -160,7 +162,7 @@ int main()
 					}
 				}
 			}
-			for (int i = 5; i > 3; --i)//Pourquoi c'est 6 et 5 genre c'était quoi la logique de l'espacement? Le for ne sert qu'à avoir une variable temporaire...
+			for (int i = 5; i > 3; --i) //Affichage des lettres bien et mal positionï¿½es
 			{
 				if (i == 5)
 				{
@@ -175,13 +177,15 @@ int main()
 					cout << bad;
 				}
 			}
+			++essai;
 		}
-		else
-			--essai;
-		//Check si le code secret a été trouvé
+		//Vï¿½rifie si le code secret a ï¿½tï¿½ trouvï¿½
 		if (good == lengthPassword)
 			break;
 	}
+	while (essai < nbEssais);
+
+	//Affichage du message de fin
 	gotoxy(0, y + nbEssais + bufferEval);
 	clreol();
 	if (good == lengthPassword)
