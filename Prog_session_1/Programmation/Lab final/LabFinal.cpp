@@ -56,12 +56,10 @@ int main()
 	srand(time(0));
 	char password[lengthPassword] = {};
 	char dummy[lengthPassword] = {};
-	string reponse;
 	for (int i = 0; i < lengthPassword; ++i)
 	{
 		password[i] = lettres[rand()%nbCouleur];
 		dummy[i] = password[i];
-		reponse = reponse + password[i] + " ";
 	}
 
 	//Jeu affichage
@@ -82,7 +80,9 @@ int main()
 	if (cheat == true) //Is debug enabled?
 	{
 		gotoxy(largeur / 2, y + nbEssais + bufferSecret);
-		cout << "Code Secret : " << reponse;
+		cout << "Code Secret : ";
+		for (int i = 0; i < lengthPassword; ++i)
+			cout << password[i] << " ";
 	}
 
 	//Input/Essais
@@ -144,7 +144,8 @@ int main()
 					if (input[i] == password[v] && i == v)
 					{
 						++good;
-						password[v] = 'a';
+						password[v] = '&';
+						input[i] = '%';
 						break;
 					}
 				}
