@@ -1,0 +1,10 @@
+piece long 291 + porte 75 + 150 (tot=516) larg 328
+lit long 205 larg 150
+bureau long 132 largeur 60
+meuble tele long 120 larg 40
+
+a venir
+https://www.ikea.com/ca/fr/p/hauga-meuble-de-rangement-blanc-s59388160/#content
+https://www.ikea.com/ca/fr/p/holmsund-canape-lit-dangle-nordvalla-beige-s39150753/
+https://www.structube.com/fr_ca/sintra-canapelit-d-angle-interchangeable-avec-rangement-30-83-59?pid=30828
+in photoshop, everything is scaled by 2, so 150 becomes 300
